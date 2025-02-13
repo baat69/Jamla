@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist For You</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=El+Messiri:wght@400..700&family=Gochi+Hand&family=Indie+Flower&family=Lalezar&family=Lemonada:wght@300..700&family=Marhey:wght@300..700&family=Noto+Sans+Arabic:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="floating-shape shape1"></div>
+        <div class="floating-shape shape2"></div>
+        <div class="floating-shape shape3"></div>
+    </div>
+    
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-card">
+            <h2>Hello baby girl</h2>
+            <input type="text" id="welcomeMessage" placeholder="Say meow...">
+            <button onclick="startPlaylist()">Done</button>
+        </div>
+    </div>
+
+    <div class="cat cat1"></div>
+    <div class="cat cat2"></div>
+    <div class="cat cat3"></div>
+    <div class="cat cat4"></div>
+    
+    <div class="main-container" id="mainContainer">
+        <header>
+            <h1>hi honey</h1>
+            <p class="subtitle">by Bader</p>
+            <p class="typewriter-text">This is for u and Only u jojo, I hope u like it... :3 </p>
+        </header>
+        
+        <div class="playlist-wrapper">
+            <div class="playlist-container">
+                <div class="slider">
+                    <div class="song-card" data-song="home">
+                        <img src="https://c.top4top.io/p_333014rm81.png" alt="Song 1">
+                        <div class="song-info">
+                            <h3>Home</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio1" src="./songs/home.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio1')">
+                                    <div class="progress" id="progress1"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio1')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="song-card" data-song="way">
+                        <img src="https://f.top4top.io/p_3330vge1i1.jpg" alt="Song 2">
+                        <div class="song-info">
+                            <h3>Just the Way You Are</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio2" src="./songs/way.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio2')">
+                                    <div class="progress" id="progress2"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio2')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="song-card" data-song="heart">
+                        <img src="https://b.top4top.io/p_3330aow7k1.png" alt="Song 3">
+                        <div class="song-info">
+                            <h3>No Other Heart</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio3" src="./songs/heart.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio3')">
+                                    <div class="progress" id="progress3"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio3')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- إضافة بطاقة الهدية قبل نهاية body -->
+    <div class="gift-overlay" id="giftOverlay">
+        <div class="gift-card">
+            <h2>This is a gift, do u want to open it?</h2>
+            <div class="gift-buttons">
+                <button class="gift-btn" onclick="showGiftSong()">YES</button>
+                <button class="gift-btn" onclick="hideGiftCard()">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- إضافة الأغنية الجديدة -->
+    <div class="song-card hidden" data-song="kiss" id="kissSong">
+        <img src="https://a.top4top.io/p_3331s1xbe1.png" alt="Kiss Song">
+        <div class="song-info">
+            <h3>Kiss</h3>
+            <p>Special Gift for My baby</p>
+            <audio id="audioKiss" src="./songs/kiss.mp3"></audio>
+            <div class="audio-controls">
+                <div class="progress-bar" onclick="seek(event, 'audioKiss')">
+                    <div class="progress" id="progressKiss"></div>
+                </div>
+                <div class="time-stamps">
+                    <span class="current-time">0:00</span>
+                    <span class="duration">0:00</span>
+                </div>
+                <div class="controls">
+                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audioKiss')" data-play="▶" data-pause="⏸">▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.song-card');
+        let currentIndex = 0;
+        let currentlyPlaying = null;
+        let currentButton = null;
+
+        function updateCardsPosition(activeIndex) {
+            cards.forEach((card, index) => {
+                card.classList.remove('center', 'top-left', 'top-right');
+                
+                if (index === activeIndex) {
+                    card.classList.add('center');
+                    card.style.zIndex = '3';
+                } else if (index < activeIndex) {
+                    card.classList.add('top-left');
+                    card.style.zIndex = '1';
+                } else {
+                    card.classList.add('top-right');
+                    card.style.zIndex = '1';
+                }
+
+                card.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${Math.abs(index - activeIndex) * 0.1}s`;
+            });
+            currentIndex = activeIndex;
+        }
+
+        function togglePlay(button, audioId) {
+            const audio = document.getElementById(audioId);
+            const card = button.closest('.song-card');
+            const songType = card.getAttribute('data-song');
+            
+            if (currentlyPlaying && currentlyPlaying !== audio) {
+                currentlyPlaying.pause();
+                currentButton.textContent = currentButton.dataset.play;
+            }
+
+            if (audio.paused) {
+                audio.play();
+                button.textContent = button.dataset.pause;
+                currentlyPlaying = audio;
+                currentButton = button;
+                
+                // تحديث جميع الألوان حسب الأغنية المشغلة
+                const root = document.documentElement;
+                const computedStyle = getComputedStyle(card);
+                root.style.setProperty('--current-title-color', computedStyle.getPropertyValue('--song-title-color'));
+                root.style.setProperty('--current-time-color', computedStyle.getPropertyValue('--song-time-color'));
+                root.style.setProperty('--current-border-color', computedStyle.getPropertyValue('--song-border-color'));
+                root.style.setProperty('--current-card-border', computedStyle.getPropertyValue('--song-card-border'));
+                root.style.setProperty('--current-background', computedStyle.getPropertyValue('--song-background'));
+                
+                // إضافة تحديث لون شريط التقدم
+                const progress = card.querySelector('.progress');
+                progress.style.backgroundColor = computedStyle.getPropertyValue('--song-progress-color');
+                
+                updateCardsPosition(Array.from(cards).indexOf(card));
+            } else {
+                audio.pause();
+                button.textContent = button.dataset.play;
+                currentlyPlaying = null;
+                currentButton = null;
+            }
+        }
+
+        function nextTrack() {
+            if (currentIndex < cards.length - 1) {
+                updateCardsPosition(currentIndex + 1);
+                if (currentlyPlaying) {
+                    currentlyPlaying.pause();
+                    currentButton.textContent = currentButton.dataset.play;
+                    const nextCard = cards[currentIndex];
+                    const nextAudio = nextCard.querySelector('audio');
+                    const nextButton = nextCard.querySelector('.play-pause');
+                    togglePlay(nextButton, nextAudio.id);
+                }
+            }
+        }
+
+        function previousTrack() {
+            if (currentIndex > 0) {
+                updateCardsPosition(currentIndex - 1);
+                if (currentlyPlaying) {
+                    currentlyPlaying.pause();
+                    currentButton.textContent = currentButton.dataset.play;
+                    const prevCard = cards[currentIndex];
+                    const prevAudio = prevCard.querySelector('audio');
+                    const prevButton = prevCard.querySelector('.play-pause');
+                    togglePlay(prevButton, prevAudio.id);
+                }
+            }
+        }
+
+        window.addEventListener('load', () => {
+            updateCardsPosition(0);
+            document.querySelector('.main-container').style.visibility = 'visible';
+        });
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateProgress(audio, progressBar, currentTimeSpan, durationSpan) {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeSpan.textContent = formatTime(audio.currentTime);
+            durationSpan.textContent = formatTime(audio.duration);
+        }
+
+        function seek(event, audioId) {
+            const audio = document.getElementById(audioId);
+            const progressBar = event.currentTarget;
+            const bounds = progressBar.getBoundingClientRect();
+            const x = event.clientX - bounds.left;
+            const width = bounds.width;
+            const percentage = x / width;
+            audio.currentTime = audio.duration * percentage;
+        }
+
+        document.querySelectorAll('audio').forEach(audio => {
+            const card = audio.closest('.song-card');
+            const progressBar = card.querySelector('.progress');
+            const currentTime = card.querySelector('.current-time');
+            const duration = card.querySelector('.duration');
+
+            audio.addEventListener('timeupdate', () => {
+                updateProgress(audio, progressBar, currentTime, duration);
+            });
+
+            audio.addEventListener('loadedmetadata', () => {
+                duration.textContent = formatTime(audio.duration);
+            });
+        });
+
+        function startPlaylist() {
+            const message = document.getElementById('welcomeMessage').value;
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            const mainContainer = document.getElementById('mainContainer');
+            const welcomeCard = document.querySelector('.welcome-card');
+            const input = document.getElementById('welcomeMessage');
+            
+            if (message.toLowerCase() !== 'meow') {
+                // إضافة تأثير الاهتزاز
+                welcomeCard.style.animation = 'none'; // إعادة تعيين الأنيميشن
+                welcomeCard.offsetHeight; // trigger reflow
+                welcomeCard.style.animation = null;
+                welcomeCard.classList.add('shake');
+                input.classList.add('error');
+                
+                // إزالة الصفوف بعد انتهاء الأنيميشن
+                setTimeout(() => {
+                    welcomeCard.classList.remove('shake');
+                    input.classList.remove('error');
+                }, 500);
+                
+                return; // منع فتح الصفحة
+            }
+
+            // في حالة كتابة الكلمة الصحيحة
+            welcomeOverlay.style.opacity = '0';
+            mainContainer.classList.add('visible');
+            
+            setTimeout(() => {
+                welcomeOverlay.style.display = 'none';
+            }, 500);
+        }
+
+        // إضافة الوظائف الجديدة
+        setTimeout(() => {
+            const giftOverlay = document.getElementById('giftOverlay');
+            giftOverlay.style.display = 'flex';
+            setTimeout(() => {
+                giftOverlay.style.opacity = '1';
+            }, 50);
+        }, 60000); // 40 ثانية
+
+        function showGiftSong() {
+            const giftOverlay = document.getElementById('giftOverlay');
+            const kissSong = document.getElementById('kissSong');
+            
+            giftOverlay.style.opacity = '0';
+            setTimeout(() => {
+                giftOverlay.style.display = 'none';
+                kissSong.classList.remove('hidden');
+                // تشغيل الأغنية تلقائياً
+                const audioKiss = document.getElementById('audioKiss');
+                const playButton = kissSong.querySelector('.play-pause');
+                togglePlay(playButton, 'audioKiss');
+            }, 500);
+        }
+
+        function hideGiftCard() {
+            const giftOverlay = document.getElementById('giftOverlay');
+            giftOverlay.style.opacity = '0';
+            setTimeout(() => {
+                giftOverlay.style.display = 'none';
+            }, 500);
+        }
+    </script>
+</body>
+</html>
