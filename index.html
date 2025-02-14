@@ -1,707 +1,351 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* إضافة تعريف animation في بداية الملف بعد التعريفات الأساسية */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-}
-
-@keyframes blink {
-    50% { border-color: transparent }
-}
-
-@keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: #800000 }
-}
-
-@keyframes cardAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.8) translateY(40px);
-        filter: blur(4px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* إضافة تأثير الاهتزاز */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-/* إضافة متغيرات CSS للألوان */
-:root {
-    --current-title-color: #000000;
-    --current-time-color: #666666;
-    --current-border-color: #344036;
-    --current-card-border: #ffffff;
-    --current-background: #ffffff;
-}
-
-body {
-    font-family: 'Noto Sans Arabic', 'El Messiri', sans-serif;
-    background: var(--current-background);
-    color: #000080;
-    min-height: 10vh;
-    padding: 1rem; /* تقليل padding الصفحة */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.8s ease;
-}
-
-.container {
-    max-width: 800px; /* تقليل العرض الأقصى */
-    width: 95%;
-    margin: 0 auto;
-    position: relative;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 2rem; /* تقليل الهامش */
-    position: relative; /* لدعم الموضع المطلق للنص المتحرك */
-}
-
-h1 {
-    font-family: 'Gochi Hand', cursive;
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
-    color: #800000
-    ;
-    font-weight: 400; /* تعديل وزن الخط ليناسب Gochi Hand */
-    letter-spacing: 1px; /* زيادة التباعد بين الحروف */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1),
-                 0 0 15px rgba(128, 0, 0, 0, 0.2);
-}
-
-.subtitle {
-    font-family: 'Gochi Hand', cursive;
-    color: #666;
-    font-size: 1.4rem; /* زيادة حجم الخط */
-    margin-top: -5px; /* تقريب النص من العنوان */
-}
-
-/* تعديل حاوية القائمة */
-.playlist-wrapper {
-    border: 4px solid #344036; /* زيادة سمك الحد من 2px إلى 4px */
-    border-radius: 30px; /* زيادة التقويس ليتناسب مع سمك الحد */
-    padding: 2rem; /* زيادة المساحة الداخلية */
-    margin: 0 auto;
-    position: relative;
-    box-shadow: 0 0 25px rgba(52, 64, 54, 0.15),
-                0 0 50px rgba(52, 64, 54, 0.1),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-    background: rgba(255, 255, 255, 0.95);
-    width: 616px; /* تعديل العرض الثابت */
-    max-width: 100%; /* لضمان التجاوب على الشاشات الصغيرة */
-    height: 450px; /* إرجاع الارتفاع إلى 600px */
-    overflow: visible; /* لمنع تجاوز البطاقات للإطار */
-    z-index: 1;
-    margin-top: 50px; /* إضافة مساحة من الأعلى */
-    border-color: var(--current-border-color);
-    transition: border-color 0.5s ease;
-}
-
-.playlist-container {
-    position: relative;
-    width: 100%;
-    height: 100%; /* تقليل الارتفاع ليسمح برؤية البطاقات العلوية */
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 0;
-    pointer-events: none;
-    overflow: visible;
-}
-
-/* تنسيق شريط التمرير لـ WebKit browsers */
-.playlist-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.playlist-container::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    margin: 0 15%; /* مساحة على جانبي شريط التمرير */
-}
-
-.playlist-container::-webkit-scrollbar-thumb {
-    background: rgba(29, 185, 84, 0.3); /* لون Spotify مع شفافية */
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.playlist-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(29, 185, 84, 0.6);
-}
-
-.slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-}
-
-.song-card {
-    position: absolute;
-    width: 200px;
-    height: 280px;
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s ease;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1),
-                0 0 20px rgba(var(--current-glow-color, 0, 0, 0), 0.1);
-    backdrop-filter: blur(3px);
-    /* جميع البطاقات تبدأ في الأعلى */
-    transform: translate(0, -200%) scale(0.8);
-    opacity: 0.6;
-    filter: blur(2px);
-    pointer-events: auto;
-    user-select: none;
-    border: 3px solid var(--current-card-border);
-}
-
-/* حالات البطاقات */
-.song-card.center {
-    transform: translate(0, 0) scale(1.1);
-    opacity: 1;
-    z-index: 3;
-    filter: blur(0);
-    bottom: 50px; /* تعديل موقع البطاقة في المنتصف */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15),
-                0 0 30px rgba(var(--current-glow-color, 0, 0, 0), 0.2);
-}
-
-.song-card.top-left {
-    transform: translate(-120%, -80%) scale(0.9); /* تعديل موقع البطاقة اليسرى */
-    opacity: 0.7;
-    z-index: 1;
-    filter: blur(1px);
-}
-
-.song-card.top-right {
-    transform: translate(120%, -80%) scale(0.9); /* تعديل موقع البطاقة اليمنى */
-    opacity: 0.7;
-    z-index: 1;
-    filter: blur(1px);
-}
-
-/* تحسين حركة hover للبطاقات العلوية */
-.song-card.top-left:hover,
-.song-card.top-right:hover {
-    transform: none !important;
-}
-
-.song-card img {
-    width: 100%;
-    height: 45%; /* تقليل ارتفاع الصورة */
-    object-fit: cover;
-    border-radius: 15px 15px 0 0;
-    margin-bottom: 0;
-}
-
-.song-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.95); /* إضافة شفافية للخلفية */
-    border-radius: 0 0 15px 15px;
-    text-align: left;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transform: translateY(5px);
-    transition: all 0.4s ease-out;
-    backdrop-filter: blur(10px);
-    height: 55%; /* تحديد ارتفاع ثابت */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.song-info h3 {
-    font-family: 'Arimo', sans-serif;
-    font-size: 1rem;
-    margin-bottom: 0.1rem;
-    color: #000000;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    color: var(--current-title-color);
-    transition: color 0.5s ease;
-}
-
-.song-info p {
-    font-family: 'Amiri', serif;
-    color: #666;
-    font-size: 0.7rem; /* تقليل حجم الخط */
-    margin-bottom: 0.2rem; /* تقليل الهامش */
-}
-
-.song-card:hover .song-info {
-    transform: translateY(0);
-}
-
-.play-button {
-    display: inline-block;
-    background: #1DB954;
-    color: white;
-    text-decoration: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 25px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.play-button .pause-text {
-    display: none;
-}
-
-.play-button.playing .play-text {
-    display: none;
-}
-
-.play-button.playing .pause-text {
-    display: inline;
-}
-
-.play-button.playing {
-    background: #ff5555;
-}
-
-.play-button:hover {
-    background: #1ed760;
-    transform: scale(1.05);
-}
-
-/* Remove .nav-buttons, .nav-btn styles */
-
-@media (max-width: 768px) {
-    body {
-        padding: 1rem;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist For You</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=El+Messiri:wght@400..700&family=Gochi+Hand&family=Indie+Flower&family=Lalezar&family=Lemonada:wght@300..700&family=Marhey:wght@300..700&family=Noto+Sans+Arabic:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="floating-shape shape1"></div>
+        <div class="floating-shape shape2"></div>
+        <div class="floating-shape shape3"></div>
+    </div>
     
-    h1 {
-        font-size: 2rem;
-    }
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-card">
+            <h2>Hello baby girl</h2>
+            <input type="text" id="welcomeMessage" placeholder="Say meow...">
+            <button onclick="startPlaylist()">Done</button>
+        </div>
+    </div>
+
+    <div class="cat cat1"></div>
+    <div class="cat cat2"></div>
+    <div class="cat cat3"></div>
+    <div class="cat cat4"></div>
     
-    .playlist-container {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem; /* إضافة مسافة بين العناصر */
-    }
-    
-    .song-card {
-        width: 200px;
-        height: 280px;
-    }
-    
-    .song-info {
-        padding: 0.8rem;
-    }
-    
-    .controls {
-        gap: 0.8rem;
-    }
-}
+    <div class="main-container" id="mainContainer">
+        <header>
+            <h1>hi honey</h1>
+            <p class="subtitle">by Bader</p>
+            <p class="typewriter-text">This is for u and Only u jojo, I hope u like it... :3 </p>
+        </header>
+        
+        <div class="playlist-wrapper">
+            <div class="playlist-container">
+                <div class="slider">
+                    <div class="song-card" data-song="home">
+                        <img src="https://c.top4top.io/p_333014rm81.png" alt="Song 1">
+                        <div class="song-info">
+                            <h3>Home</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio1" src="./songs/home.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio1')">
+                                    <div class="progress" id="progress1"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio1')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-.audio-controls {
-    margin-top: 0.5rem;
-    background: transparent; /* إزالة الخلفية */
-    padding: 0.5rem;
-}
+                    <div class="song-card" data-song="way">
+                        <img src="https://i.imgur.com/OS9bzDq.jpeg" alt="Song 2">
+                        <div class="song-info">
+                            <h3>Just the Way You Are</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio2" src="./songs/way.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio2')">
+                                    <div class="progress" id="progress2"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio2')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-.progress-bar {
-    height: 3px; /* تقليل سمك شريط التقدم */
-    background: #eee;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-    position: relative;
-    cursor: pointer;
-}
+                    <div class="song-card" data-song="heart">
+                        <img src="https://i.imgur.com/GRkKV1h.png" alt="Song 3">
+                        <div class="song-info">
+                            <h3>No Other Heart</h3>
+                            <p>Made for Jazo</p>
+                            <audio id="audio3" src="./songs/heart.mp3"></audio>
+                            <div class="audio-controls">
+                                <div class="progress-bar" onclick="seek(event, 'audio3')">
+                                    <div class="progress" id="progress3"></div>
+                                </div>
+                                <div class="time-stamps">
+                                    <span class="current-time">0:00</span>
+                                    <span class="duration">0:00</span>
+                                </div>
+                                <div class="controls">
+                                    <button class="control-btn" onclick="previousTrack()">⏮</button>
+                                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audio3')" data-play="▶" data-pause="⏸">▶</button>
+                                    <button class="control-btn" onclick="nextTrack()">⏭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-.progress {
-    height: 100%;
-    background: var(--current-time-color); /* تغيير اللون حسب متغير اللون الحالي */
-    border-radius: 2px;
-    transition: width 0.1s linear, background-color 0.5s ease;
-}
+                </div>
+            </div>
+        </div>
+    </div>
 
-.time-stamps {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem; /* تقليل حجم خط الوقت */
-    margin-bottom: 0.5rem; /* تقليل الهامش */
-    color: var(--current-time-color);
-    transition: color 0.5s ease;
-}
+    <!-- إضافة بطاقة الهدية قبل نهاية body -->
+    <div class="gift-overlay" id="giftOverlay">
+        <div class="gift-card">
+            <h2>This is a gift, do u want to open it?</h2>
+            <div class="gift-buttons">
+                <button class="gift-btn" onclick="showGiftSong()">YES</button>
+                <button class="gift-btn" onclick="hideGiftCard()">NO</button>
+            </div>
+        </div>
+    </div>
 
-.controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem; /* تقليل المسافة بين الأزرار */
-    transition: all 0.3s ease-out;
-}
+    <!-- إضافة الأغنية الجديدة -->
+    <div class="song-card hidden" data-song="kiss" id="kissSong">
+        <img src="https://a.top4top.io/p_3331s1xbe1.png" alt="Kiss Song">
+        <div class="song-info">
+            <h3>Kiss</h3>
+            <p>Special Gift for My baby</p>
+            <audio id="audioKiss" src="./songs/kiss.mp3"></audio>
+            <div class="audio-controls">
+                <div class="progress-bar" onclick="seek(event, 'audioKiss')">
+                    <div class="progress" id="progressKiss"></div>
+                </div>
+                <div class="time-stamps">
+                    <span class="current-time">0:00</span>
+                    <span class="duration">0:00</span>
+                </div>
+                <div class="controls">
+                    <button class="control-btn play-pause" onclick="togglePlay(this, 'audioKiss')" data-play="▶" data-pause="⏸">▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-.control-btn {
-    font-family: 'Lalezar', 'Ubuntu', sans-serif;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem; /* تقليل حجم الأيقونات */
-    color: #333;
-    padding: 0.5rem; /* تقليل padding */
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center;
-    opacity: 0.8;
-}
+    <script>
+        const cards = document.querySelectorAll('.song-card');
+        let currentIndex = 0;
+        let currentlyPlaying = null;
+        let currentButton = null;
 
-.control-btn:hover {
-    transform: scale(1.15);
-    color: #1DB954;
-}
+        function updateCardsPosition(activeIndex) {
+            cards.forEach((card, index) => {
+                card.classList.remove('center', 'top-left', 'top-right');
+                
+                if (index === activeIndex) {
+                    card.classList.add('center');
+                    card.style.zIndex = '3';
+                } else if (index < activeIndex) {
+                    card.classList.add('top-left');
+                    card.style.zIndex = '1';
+                } else {
+                    card.classList.add('top-right');
+                    card.style.zIndex = '1';
+                }
 
-.control-btn:active {
-    transform: scale(0.95);
-}
+                card.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${Math.abs(index - activeIndex) * 0.1}s`;
+            });
+            currentIndex = activeIndex;
+        }
 
-.typewriter-text {
-    font-family: 'Gochi Hand', cursive;
-    font-size: 1.2rem;
-    color: #800000;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 2px solid #800000;
-    width: 0;
-    animation: typing 4s steps(44, end) forwards,
-             blink-caret 0.75s step-end infinite;
-    position: relative; /* Changed from absolute */
-    display: block;
-    margin: 10px auto; /* Added margin */
-    transform: none; /* Remove rotation */
-    padding: 5px;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
+        function togglePlay(button, audioId) {
+            const audio = document.getElementById(audioId);
+            const card = button.closest('.song-card');
+            const songType = card.getAttribute('data-song');
+            
+            if (currentlyPlaying && currentlyPlaying !== audio) {
+                currentlyPlaying.pause();
+                currentButton.textContent = currentButton.dataset.play;
+            }
 
-.cat {
-    position: fixed;
-    width: 80px;
-    height: 80px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    z-index: 1000;
-}
+            if (audio.paused) {
+                audio.play();
+                button.textContent = button.dataset.pause;
+                currentlyPlaying = audio;
+                currentButton = button;
+                
+                // تحديث جميع الألوان حسب الأغنية المشغلة
+                const root = document.documentElement;
+                const computedStyle = getComputedStyle(card);
+                root.style.setProperty('--current-title-color', computedStyle.getPropertyValue('--song-title-color'));
+                root.style.setProperty('--current-time-color', computedStyle.getPropertyValue('--song-time-color'));
+                root.style.setProperty('--current-border-color', computedStyle.getPropertyValue('--song-border-color'));
+                root.style.setProperty('--current-card-border', computedStyle.getPropertyValue('--song-card-border'));
+                root.style.setProperty('--current-background', computedStyle.getPropertyValue('--song-background'));
+                
+                // إضافة تحديث لون شريط التقدم
+                const progress = card.querySelector('.progress');
+                progress.style.backgroundColor = computedStyle.getPropertyValue('--song-progress-color');
+                
+                updateCardsPosition(Array.from(cards).indexOf(card));
+            } else {
+                audio.pause();
+                button.textContent = button.dataset.play;
+                currentlyPlaying = null;
+                currentButton = null;
+            }
+        }
 
-.cat1 {
-    top: 10px;
-    left: 10px;
-    background-image: url('https://i.imgur.com/dFVSuzt.gif');
-}
+        function nextTrack() {
+            if (currentIndex < cards.length - 1) {
+                updateCardsPosition(currentIndex + 1);
+                if (currentlyPlaying) {
+                    currentlyPlaying.pause();
+                    currentButton.textContent = currentButton.dataset.play;
+                    const nextCard = cards[currentIndex];
+                    const nextAudio = nextCard.querySelector('audio');
+                    const nextButton = nextCard.querySelector('.play-pause');
+                    togglePlay(nextButton, nextAudio.id);
+                }
+            }
+        }
 
-.cat2 {
-    top: 10px;
-    right: 10px;
-    background-image: url('https://i.imgur.com/dFVSuzt.gif');
-}
+        function previousTrack() {
+            if (currentIndex > 0) {
+                updateCardsPosition(currentIndex - 1);
+                if (currentlyPlaying) {
+                    currentlyPlaying.pause();
+                    currentButton.textContent = currentButton.dataset.play;
+                    const prevCard = cards[currentIndex];
+                    const prevAudio = prevCard.querySelector('audio');
+                    const prevButton = prevCard.querySelector('.play-pause');
+                    togglePlay(prevButton, prevAudio.id);
+                }
+            }
+        }
 
-.cat3 {
-    bottom: 10px;
-    left: 10px;
-    background-image: url('https://i.imgur.com/dFVSuzt.gif');
-}
+        window.addEventListener('load', () => {
+            updateCardsPosition(0);
+            document.querySelector('.main-container').style.visibility = 'visible';
+        });
 
-.cat4 {
-    bottom: 10px;
-    right: 10px;
-    background-image: url('https://i.imgur.com/dFVSuzt.gif');
-    transform: scaleX(-1);
-}
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
 
-/* تعريف الحالات الجديدة للبطاقات */
-.song-card.center {
-    transform: translateX(0) translateY(0) scale(1.1);
-    opacity: 1;
-    z-index: 3;
-    filter: blur(0);
-}
+        function updateProgress(audio, progressBar, currentTimeSpan, durationSpan) {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeSpan.textContent = formatTime(audio.currentTime);
+            durationSpan.textContent = formatTime(audio.duration);
+        }
 
-.song-card.top-left {
-    transform: translateX(-120%) translateY(-150%) scale(0.8);
-    opacity: 0.6;
-    z-index: 1;
-    filter: blur(1px);
-}
+        function seek(event, audioId) {
+            const audio = document.getElementById(audioId);
+            const progressBar = event.currentTarget;
+            const bounds = progressBar.getBoundingClientRect();
+            const x = event.clientX - bounds.left;
+            const width = bounds.width;
+            const percentage = x / width;
+            audio.currentTime = audio.duration * percentage;
+        }
 
-.song-card.top-right {
-    transform: translateX(120%) translateY(-150%) scale(0.8);
-    opacity: 0.6;
-    z-index: 1;
-    filter: blur(1px);
-}
+        document.querySelectorAll('audio').forEach(audio => {
+            const card = audio.closest('.song-card');
+            const progressBar = card.querySelector('.progress');
+            const currentTime = card.querySelector('.current-time');
+            const duration = card.querySelector('.duration');
 
-/* تحسين الانتقالات */
-.song-card {
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
+            audio.addEventListener('timeupdate', () => {
+                updateProgress(audio, progressBar, currentTime, duration);
+            });
 
-/* تعريف ألوان مخصصة لكل بطاقة */
-.song-card[data-song="home"] {
-    --song-title-color: #b5a94e;
-    --song-time-color: #b5a94e;
-    --song-border-color: #b5a94e;
-    --song-card-border: #b5a94e;
-    --song-progress-color: #b5a94e; /* إضافة لون شريط التقدم */
-    --song-background: #ffffff;
-}
+            audio.addEventListener('loadedmetadata', () => {
+                duration.textContent = formatTime(audio.duration);
+            });
+        });
 
-.song-card[data-song="way"] {
-    --song-title-color: #3489eb;
-    --song-time-color: #3489eb;
-    --song-border-color: #3489eb;
-    --song-card-border: #3489eb;
-    --song-progress-color: #3489eb; /* إضافة لون شريط التقدم */
-    --song-background: #ffffff;
-}
+        function startPlaylist() {
+            const message = document.getElementById('welcomeMessage').value;
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            const mainContainer = document.getElementById('mainContainer');
+            const welcomeCard = document.querySelector('.welcome-card');
+            const input = document.getElementById('welcomeMessage');
+            
+            if (message.toLowerCase() !== 'meow') {
+                // إضافة تأثير الاهتزاز
+                welcomeCard.style.animation = 'none'; // إعادة تعيين الأنيميشن
+                welcomeCard.offsetHeight; // trigger reflow
+                welcomeCard.style.animation = null;
+                welcomeCard.classList.add('shake');
+                input.classList.add('error');
+                
+                // إزالة الصفوف بعد انتهاء الأنيميشن
+                setTimeout(() => {
+                    welcomeCard.classList.remove('shake');
+                    input.classList.remove('error');
+                }, 500);
+                
+                return; // منع فتح الصفحة
+            }
 
-.song-card[data-song="heart"] {
-    --song-title-color: #5e1925;
-    --song-time-color: #5e1925;
-    --song-border-color: #5e1925;
-    --song-card-border: #5e1925;
-    --song-progress-color: #5e1925; /* إضافة لون شريط التقدم */
-    --song-background: #ffffff;
-}
+            // في حالة كتابة الكلمة الصحيحة
+            welcomeOverlay.style.opacity = '0';
+            mainContainer.classList.add('visible');
+            
+            setTimeout(() => {
+                welcomeOverlay.style.display = 'none';
+            }, 500);
+        }
 
-/* إضافة تنسيقات بطاقة الهدية */
-.gift-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    display: none; /* سيتم تغييرها إلى flex عند الظهور */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(8px);
-    transition: opacity 0.5s ease;
-    opacity: 0;
-}
+        // إضافة الوظائف الجديدة
+        setTimeout(() => {
+            const giftOverlay = document.getElementById('giftOverlay');
+            giftOverlay.style.display = 'flex';
+            setTimeout(() => {
+                giftOverlay.style.opacity = '1';
+            }, 50);
+        }, 60000); // 40 ثانية
 
-.gift-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    border: 3px solid #ff69b4; /* لون وردي للهدية */
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-    animation: cardAppear 0.5s ease forwards;
-}
+        function showGiftSong() {
+            const giftOverlay = document.getElementById('giftOverlay');
+            const kissSong = document.getElementById('kissSong');
+            
+            giftOverlay.style.opacity = '0';
+            setTimeout(() => {
+                giftOverlay.style.display = 'none';
+                kissSong.classList.remove('hidden');
+                // تشغيل الأغنية تلقائياً
+                const audioKiss = document.getElementById('audioKiss');
+                const playButton = kissSong.querySelector('.play-pause');
+                togglePlay(playButton, 'audioKiss');
+            }, 500);
+        }
 
-.gift-card h2 {
-    color: #ff69b4;
-    margin-bottom: 1rem;
-    font-family: 'Gochi Hand', cursive;
-    font-size: 2rem;
-}
-
-.gift-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-
-.gift-btn {
-    background: #ff69b4;
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.gift-btn:hover {
-    transform: scale(1.05);
-}
-
-/* إضافة تنسيقات للأغنية الجديدة */
-.song-card[data-song="kiss"] {
-    --song-title-color: #ff69b4;
-    --song-time-color: #ff69b4;
-    --song-border-color: #ff69b4;
-    --song-card-border: #ff69b4;
-    --song-progress-color: #ff69b4;
-    --song-background: #fff0f5;
-}
-
-/* إضافة تنسيقات الصفحة الترحيبية */
-.welcome-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    backdrop-filter: blur(8px);
-    transition: opacity 0.5s ease;
-}
-
-.welcome-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    border: 3px solid #5e1925;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-    animation: cardAppear 0.5s ease forwards;
-}
-
-.welcome-card.shake {
-    animation: shake 0.5s ease-in-out;
-}
-
-.welcome-card input.error {
-    border-color: #ff3333;
-    box-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
-}
-
-.welcome-card h2 {
-    color: #5e1925;
-    margin-bottom: 1rem;
-    font-family: 'Gochi Hand', cursive;
-    font-size: 2rem;
-}
-
-.welcome-card input {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 1rem 0;
-    border: 2px solid #5e1925;
-    border-radius: 8px;
-    font-size: 1rem;
-    outline: none;
-}
-
-.welcome-card button {
-    background: #5e1925;
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.welcome-card button:hover {
-    transform: scale(1.05);
-}
-
-/* تعديل الحاوية الرئيسية */
-.main-container {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-/* تأكيد عرض الحاوية الرئيسية عند ظهورها */
-.main-container.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* إضافة تأثيرات الخلفية المتحركة */
-.background-effects {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.floating-shape {
-    position: absolute;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
-    border-radius: 50%;
-    animation: float 15s infinite ease-in-out;
-    backdrop-filter: blur(2px);
-}
-
-.shape1 {
-    width: 150px;
-    height: 150px;
-    top: 10%;
-    left: 10%;
-    animation-delay: 0s;
-}
-
-.shape2 {
-    width: 100px;
-    height: 100px;
-    top: 60%;
-    right: 15%;
-    animation-delay: -5s;
-}
-
-.shape3 {
-    width: 80px;
-    height: 80px;
-    bottom: 20%;
-    left: 20%;
-    animation-delay: -10s;
-}
-
-/* تحريك الأشكال */
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-20px) rotate(180deg);
-    }
-}
+        function hideGiftCard() {
+            const giftOverlay = document.getElementById('giftOverlay');
+            giftOverlay.style.opacity = '0';
+            setTimeout(() => {
+                giftOverlay.style.display = 'none';
+            }, 500);
+        }
+    </script>
+</body>
+</html>
